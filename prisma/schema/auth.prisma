@@ -9,9 +9,12 @@ model User {
   sessions      Session[]
   accounts      Account[]
 
-  role   String? @default("USER")
-  phone  String?
-  status String? @default("ACTIVE")
+  role    String?   @default("USER")
+  phone   String?
+  status  String?   @default("ACTIVE")
+  reviews Reviews[]
+  carts   Cart[]
+  orders  Orders[]
 
   @@unique([email])
   @@map("user")
@@ -64,3 +67,5 @@ model Verification {
   @@index([identifier])
   @@map("verification")
 }
+
+//---------------------------------

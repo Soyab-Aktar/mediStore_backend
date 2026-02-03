@@ -1,0 +1,26 @@
+model Orders {
+  order_id        String         @id @default(uuid())
+  customer_id     String
+  totalAmount     Int
+  status          OrderStatus    @default(PLACED)
+  shippingAddress String         @db.Text
+  paymentMethod   PaymentMethods @default(CASH_ON_DELIVERY)
+  createdAt       DateTime       @default(now())
+  orderItems      OrderItems[]
+  customer        User           @relation(fields: [customer_id], references: [id])
+
+  @@index([customer_id])
+  @@map("orders")
+}
+
+enum OrderStatus {
+  PLACED
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+enum PaymentMethods {
+  CASH_ON_DELIVERY
+}
