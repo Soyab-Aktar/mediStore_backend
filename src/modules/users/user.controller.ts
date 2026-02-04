@@ -26,6 +26,7 @@ const updateUserStatus = async (req: Request, res: Response) => {
     if (!user) {
       throw new Error("Not Authorised, Please login");
     }
+    console.log({ user });
     const id = req.params.id;
     const isAdmin = user.role === UserRole.ADMIN;
 

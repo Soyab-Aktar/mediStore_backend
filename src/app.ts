@@ -5,6 +5,7 @@ import { auth } from "./lib/auth";
 import { authMiddleware } from "./middleware/authMiddleware";
 import { UserRole } from "./constants/UserRoles";
 import { userRouter } from "./modules/users/user.route";
+import { authRouter } from "./modules/auth/auth.route";
 
 
 
@@ -14,11 +15,12 @@ app.use(cors({
   credentials: true
 }))
 
-app.all("/api/auth/*splat", toNodeHandler(auth));
 
 app.use(express.json());
 
 app.use('/api/admin/users', userRouter);
+app.use('/api/auth', authRouter);
+app.all("/api/auth/*splat", toNodeHandler(auth));
 
 app.get('/', (req, res) => {
   res.send("Hello, Welcome To Medi Store")
