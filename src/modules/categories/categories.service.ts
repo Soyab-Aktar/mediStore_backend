@@ -2,7 +2,6 @@ import { prisma } from "../../lib/prisma"
 
 // TODO - Create category
 const createCategory = async (payload: {
-  category_id: string,
   category_description?: string,
   category_name: string
 }) => {

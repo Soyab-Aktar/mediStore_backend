@@ -7,6 +7,7 @@ import { UserRole } from "./constants/UserRoles";
 import { userRouter } from "./modules/users/user.route";
 import { authRouter } from "./modules/auth/auth.route";
 import { categoryRouter } from "./modules/categories/categories.route";
+import { medicineRouter } from "./modules/medicines/medicine.route";
 
 
 
@@ -19,6 +20,7 @@ app.use(cors({
 
 app.use(express.json());
 
+app.use('/api', medicineRouter);
 app.use('/api/admin/users', userRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/categories', categoryRouter);
