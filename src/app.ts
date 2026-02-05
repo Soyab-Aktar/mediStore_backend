@@ -8,6 +8,7 @@ import { userRouter } from "./modules/users/user.route";
 import { authRouter } from "./modules/auth/auth.route";
 import { categoryRouter } from "./modules/categories/categories.route";
 import { medicineRouter } from "./modules/medicines/medicine.route";
+import { orderRouter } from "./modules/orders/order.route";
 
 
 
@@ -21,9 +22,10 @@ app.use(cors({
 app.use(express.json());
 
 app.use('/api', medicineRouter);
-app.use('/api/admin/users', userRouter);
+app.use('/api', orderRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/categories', categoryRouter);
+app.use('/api/admin/users', userRouter);
 app.all("/api/auth/*splat", toNodeHandler(auth));
 
 
