@@ -1,19 +1,18 @@
 model Medicines {
-  medicine_id           String       @id @default(uuid())
-  medicine_name         String       @db.VarChar(200)
-  medicine_description  String       @db.Text
+  medicine_id           String    @id @default(uuid())
+  medicine_name         String    @db.VarChar(200)
+  medicine_description  String    @db.Text
   medicine_price        Int
-  medicine_manufacturer String       @db.VarChar(150)
+  medicine_manufacturer String    @db.VarChar(150)
   medicine_stock        Int
-  isActive              Boolean      @default(true)
+  isActive              Boolean   @default(true)
   category_id           String
   seller_id             String
-  createdAt             DateTime     @default(now())
-  updatedAt             DateTime     @updatedAt
-  categoryRelation      Category     @relation(fields: [category_id], references: [category_id], onDelete: Cascade)
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+  categoryRelation      Category  @relation(fields: [category_id], references: [category_id], onDelete: Cascade)
   reviews               Reviews[]
-  carts                 Cart[]
-  orderItems            OrderItems[]
+  orders                Orders[]
 
   @@index([category_id])
   @@index([seller_id])
