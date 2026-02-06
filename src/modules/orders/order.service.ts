@@ -1,3 +1,4 @@
+import { Orders, OrderStatus } from "../../../generated/prisma/client";
 import { UserRole } from "../../constants/UserRoles";
 import { prisma } from "../../lib/prisma";
 
@@ -66,7 +67,7 @@ const createOrder = async (
 };
 
 //TODO - Get all orders - Customers
-const getAllOrders = async (id: string) => {
+const getAllUserOrders = async (id: string) => {
 
   const result = await prisma.orders.findMany({
     where: {
@@ -76,7 +77,7 @@ const getAllOrders = async (id: string) => {
   return result;
 }
 //TODO - Get order by id
-const getAllOrdersByID = async (id: string) => {
+const getOrdersByID = async (id: string) => {
   const result = await prisma.orders.findUnique({
     where: {
       order_id: id
@@ -84,8 +85,8 @@ const getAllOrdersByID = async (id: string) => {
   })
   return result;
 }
-//TODO - Get all orders - Seller
 
+//TODO - Get all orders - Seller
 const getAllSellerOrders = async (id: string) => {
 
   const result = await prisma.orders.findMany({
@@ -97,9 +98,56 @@ const getAllSellerOrders = async (id: string) => {
   });
   return result;
 }
+//TODO - Update order status
+
+type UpdateOrderStatusPayload = {
+  status: OrderStatus;
+};
+
+const updateOrderStatus = async (
+  orderID: string,
+  data: UpdateOrderStatusPayload
+) => {
+  const order = await prisma.orders.findUnique({
+    where: {
+      order_id: orderID,
+    },
+  });
+
+  if (!order) {
+    throw new Error("Order not found");
+  }
+
+  const allowedTransitions: Record<OrderStatus, OrderStatus[]> = {
+    PLACED: [OrderStatus.PROCESSING, OrderStatus.CANCELLED],
+    PROCESSING: [OrderStatus.SHIPPED],
+    SHIPPED: [OrderStatus.DELIVERED],
+    DELIVERED: [],
+    CANCELLED: [],
+  };
+
+  const currentStatus = order.status;
+  const nextStatus = data.status;
+
+  if (!allowedTransitions[currentStatus].includes(nextStatus)) {
+    throw new Error(
+      `Cannot change order status from ${currentStatus} to ${nextStatus}`
+    );
+  }
+
+  return prisma.orders.update({
+    where: {
+      order_id: orderID,
+    },
+    data: {
+      status: nextStatus,
+    },
+  });
+};
+
 
 
 
 export const orderService = {
-  createOrder, getAllOrders, getAllOrdersByID, getAllSellerOrders
+  createOrder, getAllUserOrders, getOrdersByID, getAllSellerOrders, updateOrderStatus
 }

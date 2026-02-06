@@ -17,10 +17,10 @@ const createOrder = async (req: Request, res: Response) => {
     })
   }
 }
-const getAllOrders = async (req: Request, res: Response) => {
+const getAllUserOrders = async (req: Request, res: Response) => {
   try {
     const user = req.user;
-    const result = await orderService.getAllOrders(user?.id as string);
+    const result = await orderService.getAllUserOrders(user?.id as string);
     res.status(200).json({
       success: true,
       data: result
@@ -35,7 +35,7 @@ const getAllOrders = async (req: Request, res: Response) => {
 const getAllSellerOrders = async (req: Request, res: Response) => {
   try {
     const user = req.user;
-    const result = await orderService.getAllOrders(user?.id as string);
+    const result = await orderService.getAllSellerOrders(user?.id as string);
     res.status(200).json({
       success: true,
       data: result
@@ -47,10 +47,10 @@ const getAllSellerOrders = async (req: Request, res: Response) => {
     })
   }
 }
-const getAllOrdersByID = async (req: Request, res: Response) => {
+const getOrdersByID = async (req: Request, res: Response) => {
   try {
-    const user = req.user;
-    const result = await orderService.getAllOrdersByID(user?.id as string);
+    const id = req.params.id;
+    const result = await orderService.getOrdersByID(id as string);
     res.status(200).json({
       success: true,
       data: result
@@ -62,8 +62,23 @@ const getAllOrdersByID = async (req: Request, res: Response) => {
     })
   }
 }
+const updateOrderStatus = async (req: Request, res: Response) => {
+  try {
+    const id = req.params.id;
+    const result = await orderService.updateOrderStatus(id as string, req.body);
+    res.status(200).json({
+      success: true,
+      data: result
+    })
+  } catch (err) {
+    res.status(400).json({
+      success: false,
+      error: "Order Status update failed",
+    })
+  }
+}
 
 
 export const orderController = {
-  createOrder, getAllOrders, getAllOrdersByID, getAllSellerOrders
+  createOrder, getAllUserOrders, getOrdersByID, getAllSellerOrders, updateOrderStatus
 }
