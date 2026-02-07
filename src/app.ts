@@ -9,6 +9,8 @@ import { authRouter } from "./modules/auth/auth.route";
 import { categoryRouter } from "./modules/categories/categories.route";
 import { medicineRouter } from "./modules/medicines/medicine.route";
 import { orderRouter } from "./modules/orders/order.route";
+import { notFound } from "./middleware/notFound";
+import errorHandler from "./middleware/globalErrorHandler";
 
 
 
@@ -32,6 +34,9 @@ app.all("/api/auth/*splat", toNodeHandler(auth));
 app.get('/', (req, res) => {
   res.send("Hello, Welcome To Medi Store")
 })
+
+app.use(notFound);
+app.use(errorHandler);
 
 
 export default app;

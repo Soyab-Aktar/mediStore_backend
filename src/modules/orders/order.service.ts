@@ -1,6 +1,6 @@
-import { Orders, OrderStatus } from "../../../generated/prisma/client";
-import { UserRole } from "../../constants/UserRoles";
+import { OrderStatus } from "../../../generated/prisma/client";
 import { prisma } from "../../lib/prisma";
+import { AppError } from "../../scripts/appError";
 
 
 // TODO - Create Order
@@ -14,18 +14,18 @@ const createOrder = async (
   payload: CreateOrderPayload,
   userId: string
 ) => {
-  const medicine = await prisma.medicines.findUnique({
+  const medicine = await prisma.medicines.findUniqueOrThrow({
     where: {
       medicine_id: payload.medicine_id,
     },
   });
 
   if (!medicine || !medicine.isActive) {
-    throw new Error("Medicine not available");
+    throw new AppError("Medicine not available", 404);
   }
 
   if (medicine.medicine_stock < payload.quantity) {
-    throw new Error("Insufficient stock");
+    throw new AppError("Insufficient stock", 400);
   }
 
   const price = medicine.medicine_price;
@@ -108,15 +108,11 @@ const updateOrderStatus = async (
   orderID: string,
   data: UpdateOrderStatusPayload
 ) => {
-  const order = await prisma.orders.findUnique({
+  const order = await prisma.orders.findUniqueOrThrow({
     where: {
       order_id: orderID,
     },
   });
-
-  if (!order) {
-    throw new Error("Order not found");
-  }
 
   const allowedTransitions: Record<OrderStatus, OrderStatus[]> = {
     PLACED: [OrderStatus.PROCESSING, OrderStatus.CANCELLED],
@@ -130,8 +126,8 @@ const updateOrderStatus = async (
   const nextStatus = data.status;
 
   if (!allowedTransitions[currentStatus].includes(nextStatus)) {
-    throw new Error(
-      `Cannot change order status from ${currentStatus} to ${nextStatus}`
+    throw new AppError(
+      `Cannot change order status from ${currentStatus} to ${nextStatus}`, 400
     );
   }
 

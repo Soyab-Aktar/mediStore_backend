@@ -1,8 +1,8 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { authService } from "./auth.service";
 
 //? Get Current User
-const getCurrentUser = async (req: Request, res: Response) => {
+const getCurrentUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const user = req.user;
     console.log({ user });
@@ -12,10 +12,7 @@ const getCurrentUser = async (req: Request, res: Response) => {
       data: result
     })
   } catch (err) {
-    res.status(400).json({
-      success: false,
-      error: err
-    })
+    next(err);
   }
 
 }

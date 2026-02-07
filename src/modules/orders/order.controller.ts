@@ -1,23 +1,20 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { orderService } from "./order.service";
 
 
-const createOrder = async (req: Request, res: Response) => {
+const createOrder = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const user = req.user;
     const result = await orderService.createOrder(req.body, user?.id as string);
-    res.status(200).json({
+    res.status(201).json({
       success: true,
       data: result
     })
   } catch (err) {
-    res.status(400).json({
-      success: false,
-      error: "Order Create failed",
-    })
+    next(err);
   }
 }
-const getAllUserOrders = async (req: Request, res: Response) => {
+const getAllUserOrders = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const user = req.user;
     const result = await orderService.getAllUserOrders(user?.id as string);
@@ -26,13 +23,10 @@ const getAllUserOrders = async (req: Request, res: Response) => {
       data: result
     })
   } catch (err) {
-    res.status(400).json({
-      success: false,
-      error: "Orders Fetch failed",
-    })
+    next(err);
   }
 }
-const getAllSellerOrders = async (req: Request, res: Response) => {
+const getAllSellerOrders = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const user = req.user;
     const result = await orderService.getAllSellerOrders(user?.id as string);
@@ -41,13 +35,10 @@ const getAllSellerOrders = async (req: Request, res: Response) => {
       data: result
     })
   } catch (err) {
-    res.status(400).json({
-      success: false,
-      error: "Orders Fetch failed",
-    })
+    next(err);
   }
 }
-const getOrdersByID = async (req: Request, res: Response) => {
+const getOrdersByID = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const id = req.params.id;
     const result = await orderService.getOrdersByID(id as string);
@@ -56,13 +47,10 @@ const getOrdersByID = async (req: Request, res: Response) => {
       data: result
     })
   } catch (err) {
-    res.status(400).json({
-      success: false,
-      error: "Order Fetch failed",
-    })
+    next(err);
   }
 }
-const updateOrderStatus = async (req: Request, res: Response) => {
+const updateOrderStatus = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const id = req.params.id;
     const result = await orderService.updateOrderStatus(id as string, req.body);
@@ -71,10 +59,7 @@ const updateOrderStatus = async (req: Request, res: Response) => {
       data: result
     })
   } catch (err) {
-    res.status(400).json({
-      success: false,
-      error: "Order Status update failed",
-    })
+    next(err);
   }
 }
 

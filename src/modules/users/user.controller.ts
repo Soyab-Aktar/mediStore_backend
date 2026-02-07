@@ -1,9 +1,9 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { userService } from "./user.service";
 import { UserRole } from "../../constants/UserRoles";
 
 //? Get All users
-const getAllUsers = async (req: Request, res: Response) => {
+const getAllUsers = async (req: Request, res: Response, next: NextFunction) => {
   try {
 
     const result = await userService.getAllUsers();
@@ -13,14 +13,11 @@ const getAllUsers = async (req: Request, res: Response) => {
     })
 
   } catch (err) {
-    res.status(400).json({
-      error: "Users Data Retrive Failed",
-      details: err,
-    })
+    next(err);
   }
 }
 //? Update user status
-const updateUserStatus = async (req: Request, res: Response) => {
+const updateUserStatus = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const user = req.user;
     if (!user) {
@@ -30,17 +27,14 @@ const updateUserStatus = async (req: Request, res: Response) => {
     const id = req.params.id;
     const isAdmin = user.role === UserRole.ADMIN;
 
-    const result = await userService.updateUserStatus(id as string, req.body, isAdmin as boolean);
-    res.status(201).json({
+    const result = await userService.updateUserStatus(id as string, req.body);
+    res.status(200).json({
       success: true,
       result: result
     })
 
   } catch (err) {
-    res.status(400).json({
-      error: "User Status update Failed",
-      details: err,
-    })
+    next(err);
   }
 }
 

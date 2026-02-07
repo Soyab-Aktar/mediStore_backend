@@ -1,5 +1,6 @@
 import { Medicines } from "../../../generated/prisma/client"
 import { prisma } from "../../lib/prisma"
+import { AppError } from "../../scripts/appError"
 
 //TODO - Create medicine
 type CreateMedicinePayload = {
@@ -47,7 +48,7 @@ const getAllMedicines = async () => {
 
 //TODO - Get medicines by ID
 const getMedicineByID = async (id: string) => {
-  const result = await prisma.medicines.findUnique({
+  const result = await prisma.medicines.findUniqueOrThrow({
     where: {
       medicine_id: id,
     }
@@ -57,15 +58,11 @@ const getMedicineByID = async (id: string) => {
 
 //TODO - Update Medicines
 const updateMedicine = async (id: string, data: Partial<Medicines>) => {
-  const medicineData = await prisma.medicines.findUnique({
+  await prisma.medicines.findUniqueOrThrow({
     where: {
       medicine_id: id,
     }
   });
-
-  if (!medicineData) {
-    throw new Error("Medicine Not found, plesse check proprly");
-  }
 
   const result = await prisma.medicines.update({
     where: {
