@@ -3,7 +3,11 @@ import { prisma } from "../../lib/prisma"
 
 //TODO - Get all users
 const getAllUsers = async () => {
-  const result = await prisma.user.findMany();
+  const result = await prisma.user.findMany({
+    orderBy: {
+      createdAt: "desc"
+    }
+  });
   return result;
 }
 //TODO - Update user status

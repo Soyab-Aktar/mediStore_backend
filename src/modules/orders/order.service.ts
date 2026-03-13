@@ -72,6 +72,9 @@ const getAllUserOrders = async (id: string) => {
   const result = await prisma.orders.findMany({
     where: {
       customer_id: id
+    },
+    orderBy: {
+      createdAt: "desc"
     }
   });
   return result;
@@ -94,6 +97,9 @@ const getAllSellerOrders = async (id: string) => {
       medicine: {
         seller_id: id
       }
+    },
+    orderBy: {
+      createdAt: "desc"
     }
   });
   return result;
