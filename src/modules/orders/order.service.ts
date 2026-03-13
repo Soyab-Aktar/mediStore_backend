@@ -1,4 +1,5 @@
 import { OrderStatus } from "../../../generated/prisma/client";
+import paginationSortingHelper from "../../helper/paginationSortingHelper";
 import { prisma } from "../../lib/prisma";
 import { AppError } from "../../scripts/appError";
 
@@ -67,8 +68,9 @@ const createOrder = async (
 };
 
 //TODO - Get all orders - Customers
-const getAllUserOrders = async (id: string) => {
+const getAllUserOrders = async (id: string, paginationData: any) => {
 
+  const { page, limit, skip } = paginationSortingHelper(paginationData);
   const result = await prisma.orders.findMany({
     where: {
       customer_id: id
@@ -77,20 +79,32 @@ const getAllUserOrders = async (id: string) => {
       createdAt: "desc"
     }
   });
-  return result;
+  const total = await prisma.medicines.count();
+  return {
+    result: result,
+    meta: {
+      page,
+      limit,
+      total
+    }
+  };
 }
 //TODO - Get order by id
 const getOrdersByID = async (id: string) => {
+
   const result = await prisma.orders.findUnique({
     where: {
       order_id: id
-    }
+    },
+
   })
+
   return result;
 }
 
 //TODO - Get all orders - Seller
-const getAllSellerOrders = async (id: string) => {
+const getAllSellerOrders = async (id: string, paginationData: any) => {
+  const { page, limit, skip } = paginationSortingHelper(paginationData);
 
   const result = await prisma.orders.findMany({
     where: {
@@ -100,9 +114,19 @@ const getAllSellerOrders = async (id: string) => {
     },
     orderBy: {
       createdAt: "desc"
-    }
+    },
+    skip,
+    take: limit,
   });
-  return result;
+  const total = await prisma.medicines.count();
+  return {
+    result: result,
+    meta: {
+      page,
+      limit,
+      total
+    }
+  };
 }
 //TODO - Update order status
 

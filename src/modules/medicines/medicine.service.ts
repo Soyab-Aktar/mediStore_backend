@@ -2,6 +2,7 @@ import { any, gte, lte } from "better-auth/*"
 import { Medicines } from "../../../generated/prisma/client"
 import { prisma } from "../../lib/prisma"
 import { AppError } from "../../scripts/appError"
+import paginationSortingHelper from "../../helper/paginationSortingHelper"
 
 //TODO - Create medicine
 type CreateMedicinePayload = {
@@ -43,7 +44,9 @@ const getAllMedicines = async (payload: {
   maxPrice?: number | undefined;
   minPrice?: number | undefined;
   sort?: string | undefined;
-}) => {
+}, paginationData: any) => {
+
+  const { page, limit, skip } = paginationSortingHelper(paginationData)
 
   const where: any = {
     isActive: true
@@ -101,10 +104,20 @@ const getAllMedicines = async (payload: {
 
   const result = await prisma.medicines.findMany({
     where,
+    skip,
+    take: limit,
     orderBy
   });
+  const total = await prisma.medicines.count({ where });
 
-  return result;
+  return {
+    result: result,
+    meta: {
+      page,
+      limit,
+      total
+    }
+  };
 };
 
 

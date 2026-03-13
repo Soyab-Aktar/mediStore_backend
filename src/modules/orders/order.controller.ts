@@ -17,7 +17,11 @@ const createOrder = async (req: Request, res: Response, next: NextFunction) => {
 const getAllUserOrders = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const user = req.user;
-    const result = await orderService.getAllUserOrders(user?.id as string);
+    const paginationData = {
+      page: req.query.page,
+      limit: req.query.limit
+    }
+    const result = await orderService.getAllUserOrders(user?.id as string, paginationData);
     res.status(200).json({
       success: true,
       data: result
@@ -29,7 +33,11 @@ const getAllUserOrders = async (req: Request, res: Response, next: NextFunction)
 const getAllSellerOrders = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const user = req.user;
-    const result = await orderService.getAllSellerOrders(user?.id as string);
+    const paginationData = {
+      page: req.query.page,
+      limit: req.query.limit
+    }
+    const result = await orderService.getAllSellerOrders(user?.id as string, paginationData);
     res.status(200).json({
       success: true,
       data: result

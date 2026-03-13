@@ -18,6 +18,10 @@ const createMedicine = async (req: Request, res: Response, next: NextFunction) =
 const getAllMedicines = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { search, category, maxPrice, minPrice, sort } = req.query;
+    const paginationData = {
+      page: req.query.page,
+      limit: req.query.limit
+    }
     const searchString = typeof search === 'string' ? search : undefined;
     const categoryString = typeof category === 'string' ? category : undefined;
     const maxPriceNum = maxPrice ? Number(maxPrice) : undefined;
@@ -30,7 +34,7 @@ const getAllMedicines = async (req: Request, res: Response, next: NextFunction) 
       maxPrice: maxPriceNum,
       minPrice: minPriceNum,
       sort: sortString
-    });
+    }, paginationData);
     res.status(200).json({
       success: true,
       data: result

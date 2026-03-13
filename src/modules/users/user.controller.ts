@@ -5,8 +5,12 @@ import { UserRole } from "../../constants/UserRoles";
 //? Get All users
 const getAllUsers = async (req: Request, res: Response, next: NextFunction) => {
   try {
+    const paginationData = {
+      page: req.query.page,
+      limit: req.query.limit
+    }
 
-    const result = await userService.getAllUsers();
+    const result = await userService.getAllUsers(paginationData);
     res.status(200).json({
       success: true,
       result: result
