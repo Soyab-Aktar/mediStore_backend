@@ -1,3 +1,4 @@
+import { any, gte, lte } from "better-auth/*"
 import { Medicines } from "../../../generated/prisma/client"
 import { prisma } from "../../lib/prisma"
 import { AppError } from "../../scripts/appError"
@@ -36,14 +37,75 @@ const createMedicine = async (
 }
 
 //TODO - Get medicines
-const getAllMedicines = async () => {
-  const result = await prisma.medicines.findMany({
-    where: {
-      isActive: true
+const getAllMedicines = async (payload: {
+  search?: string | undefined;
+  category?: string | undefined;
+  maxPrice?: number | undefined;
+  minPrice?: number | undefined;
+  sort?: string | undefined;
+}) => {
+
+  const where: any = {
+    isActive: true
+  };
+
+  // Search
+  if (payload.search) {
+    where.OR = [
+      {
+        medicine_name: {
+          contains: payload.search,
+          mode: "insensitive"
+        }
+      },
+      {
+        medicine_manufacturer: {
+          contains: payload.search,
+          mode: "insensitive"
+        }
+      }
+    ];
+  }
+
+  // Category filter
+  if (payload.category) {
+    where.categoryRelation = {
+      category_name: {
+        equals: payload.category,
+        mode: "insensitive"
+      }
     }
+  }
+
+  //Price filter
+  if (payload.minPrice) {
+    where.medicine_price = { gte: payload.minPrice };
+  }
+
+  if (payload.maxPrice) {
+    where.medicine_price = {
+      ...where.medicine_price,
+      lte: payload.maxPrice
+    };
+  }
+
+  // sorting
+  let orderBy: any = undefined;
+  if (payload.sort === "price_asc") {
+    orderBy = { medicine_price: "asc" };
+  }
+
+  if (payload.sort === "price_desc") {
+    orderBy = { medicine_price: "desc" };
+  }
+
+  const result = await prisma.medicines.findMany({
+    where,
+    orderBy
   });
+
   return result;
-}
+};
 
 
 //TODO - Get medicines by ID
