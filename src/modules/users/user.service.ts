@@ -1,4 +1,4 @@
-import { User } from "../../../generated/prisma/client";
+import { User } from "@prisma/client";
 import paginationSortingHelper from "../../helper/paginationSortingHelper";
 import { prisma } from "../../lib/prisma"
 

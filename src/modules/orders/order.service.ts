@@ -1,4 +1,4 @@
-import { OrderStatus } from "../../../generated/prisma/client";
+import { OrderStatus } from "@prisma/client";
 import paginationSortingHelper from "../../helper/paginationSortingHelper";
 import { prisma } from "../../lib/prisma";
 import { AppError } from "../../scripts/appError";

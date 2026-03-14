@@ -1,8 +1,8 @@
 import { any, gte, lte } from "better-auth/*"
-import { Medicines } from "../../../generated/prisma/client"
 import { prisma } from "../../lib/prisma"
 import { AppError } from "../../scripts/appError"
 import paginationSortingHelper from "../../helper/paginationSortingHelper"
+import { Medicines } from "@prisma/client"
 
 //TODO - Create medicine
 type CreateMedicinePayload = {
