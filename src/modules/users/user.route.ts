@@ -5,7 +5,7 @@ import { UserRole } from "../../constants/UserRoles";
 
 const router = express.Router();
 
-router.get('/', userController.getAllUsers);
+router.get('/', authMiddleware(UserRole.ADMIN), userController.getAllUsers);
 router.patch('/:id', authMiddleware(UserRole.ADMIN), userController.updateUserStatus);
 
 

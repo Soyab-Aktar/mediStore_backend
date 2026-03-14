@@ -5,7 +5,6 @@ import { authService } from "./auth.service";
 const getCurrentUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const user = req.user;
-    console.log({ user });
     const result = await authService.getCurrentUser(user?.id as string);
     res.status(200).json({
       success: true,

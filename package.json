@@ -1,12 +1,13 @@
 {
-  "name": "blog_app_backend",
+  "name": "medistore_backend",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "npx tsx watch src/server.ts",
-    "seed:admin": "npx tsx src/scripts/seedAdmin.ts"
+    "seed:admin": "npx tsx src/scripts/seedAdmin.ts",
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",
