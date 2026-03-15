@@ -11,6 +11,7 @@ import { medicineRouter } from "./modules/medicines/medicine.route";
 import { orderRouter } from "./modules/orders/order.route";
 import { notFound } from "./middleware/notFound";
 import errorHandler from "./middleware/globalErrorHandler";
+import { reviewRouter } from "./modules/reviews/review.route";
 
 
 
@@ -25,6 +26,7 @@ app.use(express.json());
 
 app.use('/api', medicineRouter);
 app.use('/api', orderRouter);
+app.use("/api", reviewRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/categories', categoryRouter);
 app.use('/api/admin/users', userRouter);
